@@ -26,6 +26,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::resource('users', UsersController::class);
 Route::put('users/{id}/status', [UsersController::class, 'softDelete']);
 Route::resource('rolls', RollController::class);
+Route::put('rolls/{id}/status', [RollController::class, 'softDelete']);
 Route::resource('pages', PagesController::class);
 Route::resource('logs', LogsController::class);
 

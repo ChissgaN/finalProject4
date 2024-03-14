@@ -1,17 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-
 export const TablaRoll = () => {
-  const [users, setUsers] = useState([]);
+  const [rolls, setRolls] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
-
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/rolls")
-      .then((response) => response.json())
-      .then((data) => setUsers(data))
-      .catch((error) => console.error("Error fetching users:", error));
+    fetchRoles();
   }, []);
 
   const handleChangePage = (page) => {
@@ -23,16 +18,56 @@ export const TablaRoll = () => {
     setCurrentPage(1);
   };
 
+  const fetchRoles = () => {
+    fetch(`http://127.0.0.1:8000/api/rolls`)
+      .then((response) => response.json())
+      .then((data) => setRolls(data))
+      .catch((error) => console.error("Error fetching rolls:", error));
+  };
 
-  const filteredUsers = users.filter((user) => {
+  const handleStatusChange = (id, newStatus) => {
+    fetch(`http://127.0.0.1:8000/api/rolls/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    })
+      .then((response) => {
+        if (response.ok) {
+          fetchRoles();
+        } else {
+          throw new Error("Error changing roll status");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const handleDelete = (id) => {
+    fetch(`http://127.0.0.1:8000/api/rolls/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          fetchRoles();
+        } else {
+          throw new Error("Error deleting roll");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    return dateTime.toLocaleString();
+  };
+
+  const filteredUsers = rolls.filter((roll) => {
     return (
-      (user.email &&
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.status &&
-        user.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.created_at && user.created_at.includes(searchTerm)) ||
-      (user.roll_id && user.roll_id.toString().includes(searchTerm)) ||
-      (user.updated_at && user.updated_at.includes(searchTerm))
+      (roll.name && roll.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (roll.status && roll.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (roll.created_at && roll.created_at.includes(searchTerm)) ||
+      (roll.updated_at && roll.updated_at.includes(searchTerm))
     );
   });
 
@@ -41,6 +76,8 @@ export const TablaRoll = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+
+  
 
   return (
     <div className="container mx-auto  py-8">
@@ -65,21 +102,30 @@ export const TablaRoll = () => {
               <td className="px-4 py-2 border">Status</td>
               <td className="px-4 py-2 border">Created</td>
               <td className="px-4 py-2 border">Update</td>
-              <td className="px-4 py-2 border">Accions</td>
+              <td className="px-4 py-2 border">Actions</td>
             </tr>
           </thead>
           <tbody>
-            {currentUsers.map((user) => (
-              <tr key={user.id} className="bg-white">
-                <td className="px-4 py-2 border">{user.id}</td>
-                <td className="px-4 py-2 border">{user.name}</td>
-                <td className="px-4 py-2 border"></td>
-                <td className="px-4 py-2 border">{user.created_at}</td>
-                <td className="px-4 py-2 border">{user.updated_at}</td>
+            {currentUsers.map((roll) => (
+              <tr key={roll.id} className="bg-white">
+                <td className="px-4 py-2 border">{roll.id}</td>
+                <td className="px-4 py-2 border">{roll.name}</td>
+                <td className="px-4 py-2 border">{roll.status}</td>
+                <td className="px-4 py-2 border">{formatDateTime(roll.created_at)}</td>
+                <td className="px-4 py-2 border">{formatDateTime(roll.updated_at)}</td>
                
                 <td className="px-4 py-2 border">
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                  <button
+                    onClick={() => handleDelete(roll.id)}
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                  >
                     Delete
+                  </button>
+                  <button
+                    onClick={() => handleStatusChange(roll.id, roll.status === "active" ? "inactive" : "active")}
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-2"
+                  >
+                    Change
                   </button>
                 </td>
               </tr>

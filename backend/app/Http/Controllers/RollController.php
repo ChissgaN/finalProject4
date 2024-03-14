@@ -113,4 +113,30 @@ class RollController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function softDelete(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:active,inactive'
+            ]);
+
+            $newStatus = $request->input('status');
+
+            $roll = Roll::findOrFail($id);
+            $roll->status = $newStatus;
+            $roll->save();
+
+            $statusChange = ($newStatus == 'active') ? 'activated' : 'inactivated';
+            $logs = Logs::add("The user with the id: {$roll->id} was $statusChange.");
+
+            if (!$logs) {
+                throw new \Exception('Error creating log.');
+            }
+
+            return response()->json(['message' => 'User status changed successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
