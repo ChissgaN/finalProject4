@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\LogsController;
 use App\Http\Controllers\PagesController;
 use App\Http\Controllers\RollController;
 use App\Http\Controllers\UsersController;
@@ -26,6 +27,8 @@ Route::resource('users', UsersController::class);
 Route::put('users/{id}/status', [UsersController::class, 'softDelete']);
 Route::resource('rolls', RollController::class);
 Route::resource('pages', PagesController::class);
+Route::resource('logs', LogsController::class);
+
 
 Route::group([
     'middleware' => 'api',

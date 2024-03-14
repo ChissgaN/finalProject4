@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 
-const TablaLogs = () => {
+export const Logs = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -24,24 +24,24 @@ const TablaLogs = () => {
   };
 
 
-  /* const filteredUsers = users.filter((user) => {
+  const filteredUsers = users.filter((user) => {
     return (
-      (user.email &&
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.status &&
-        user.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.created_at && user.created_at.includes(searchTerm)) ||
-      (user.roll_id && user.roll_id.toString().includes(searchTerm)) ||
-      (user.updated_at && user.updated_at.includes(searchTerm))
+        (user.id && user.id.toString().includes(searchTerm)) ||
+      (user.description &&
+        user.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.date &&
+        user.date.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.hour && user.hour.includes(searchTerm))
+      
     );
-  }); */
+  });
 
-  /* const itemsPerPage = 5; */
-  /* const totalPages = Math.ceil(filteredUsers.length / itemsPerPage); */
-  /* const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage; */
-  /* const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem); */
-  
+  const itemsPerPage = 5;
+  const totalPages = Math.ceil(filteredUsers.length / itemsPerPage);
+  const indexOfLastItem = currentPage * itemsPerPage;
+  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
+
   return (
     <div className="container mx-auto  py-8">
       <div className="mb-4 flex items-center justify-between">
@@ -53,7 +53,7 @@ const TablaLogs = () => {
           className="p-2 border border-gray-300 rounded-md w-64"
         />
         <p className="text-gray-600">
-          Página {currentPage} de {totalPages}
+          Page {currentPage} of {totalPages}
         </p>
       </div>
       <div className="overflow-x-auto">
@@ -61,28 +61,18 @@ const TablaLogs = () => {
           <thead>
             <tr className="bg-gray-200">
               <td className="px-4 py-2 border">ID</td>
-              <td className="px-4 py-2 border">Name</td>
-              <td className="px-4 py-2 border">Status</td>
-              <td className="px-4 py-2 border">Created</td>
-              <td className="px-4 py-2 border">Update</td>
-              
-              <td className="px-4 py-2 border">Delete</td>
+              <td className="px-4 py-2 border">Description</td>
+              <td className="px-4 py-2 border">Date</td>
+              <td className="px-4 py-2 border">Hour</td>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user) => (
               <tr key={user.id} className="bg-white">
                 <td className="px-4 py-2 border">{user.id}</td>
-                <td className="px-4 py-2 border">{user.name}</td>
-                <td className="px-4 py-2 border"></td>
-                <td className="px-4 py-2 border">{user.created_at}</td>
-                <td className="px-4 py-2 border">{user.updated_at}</td>
-               
-                <td className="px-4 py-2 border">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Change
-                  </button>
-                </td>
+                <td className="px-4 py-2 border">{user.description}</td>
+                <td className="px-4 py-2 border">{user.date}</td>
+                <td className="px-4 py-2 border">{user.hour}</td>
               </tr>
             ))}
           </tbody>
@@ -98,7 +88,7 @@ const TablaLogs = () => {
               : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
-          Anterior
+          Previous
         </button>
         <button
           onClick={() => handleChangePage(currentPage + 1)}
@@ -109,10 +99,9 @@ const TablaLogs = () => {
               : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
-          Siguiente
+          Next
         </button>
       </div>
     </div>
   );
 };
-export default TablaLogs;

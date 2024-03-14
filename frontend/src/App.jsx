@@ -10,7 +10,8 @@ import { Login } from "./components/StructureOpenPage/Login";
 import Usuarios from "./components/Usuarios/Usuarios";
 import DashBoard from "./components/Usuarios/DashBoard";
 import Roll from "./components/Usuarios/Roll";
-import Logs from "./components/Usuarios/Logs";
+import { Logs } from "./components/Usuarios/Logs";
+
 
 function App() {
  

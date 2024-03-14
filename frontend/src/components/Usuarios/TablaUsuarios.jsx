@@ -64,7 +64,7 @@ export const TablaUsuarios = () => {
           className="p-2 border border-gray-300 rounded-md w-64"
         />
         <p className="text-gray-600">
-          Página {currentPage} de {totalPages}
+          Page {currentPage} of {totalPages}
         </p>
       </div>
       <div className="overflow-x-auto">
@@ -111,7 +111,7 @@ export const TablaUsuarios = () => {
               : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
-          Anterior
+          Previous
         </button>
         <button
           onClick={() => handleChangePage(currentPage + 1)}
@@ -122,7 +122,7 @@ export const TablaUsuarios = () => {
               : "bg-gray-200 hover:bg-gray-300"
           }`}
         >
-          Siguiente
+          Next
         </button>
       </div>
     </div>

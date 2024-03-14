@@ -12,7 +12,8 @@ class LogsController extends Controller
      */
     public function index()
     {
-        //
+        $logs = Logs::all();
+        return response()->json($logs);
     }
 
     /**
