@@ -1,11 +1,9 @@
 import React, { useState, useEffect } from "react";
 
-
 export const Tablepages = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/pages")
@@ -13,6 +11,40 @@ export const Tablepages = () => {
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
+  
+  const handleStatusChange = (id, newStatus) => {
+    fetch(`http://127.0.0.1:8000/api/pages/${id}/status`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ status: newStatus }),
+    })
+      .then((response) => {
+        if (response.ok) 
+        {
+          window.location.reload();
+          setCurrentPage(1);
+        } else {
+          throw new Error("Error changing page status");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
+
+  const handleDelete = (id) => {
+    fetch(`http://127.0.0.1:8000/api/pages/${id}`, {
+      method: "DELETE",
+    })
+      .then((response) => {
+        if (response.ok) {
+          window.location.reload();
+        } else {
+          throw new Error("Error deleting page");
+        }
+      })
+      .catch((error) => console.error("Error:", error));
+  };
 
   const handleChangePage = (page) => {
     setCurrentPage(page);
@@ -21,6 +53,16 @@ export const Tablepages = () => {
   const handleSearch = (event) => {
     setSearchTerm(event.target.value);
     setCurrentPage(1);
+  };
+
+  const formatDate = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    return dateTime.toLocaleDateString();
+  };
+
+  const formatDateTime = (dateTimeString) => {
+    const dateTime = new Date(dateTimeString);
+    return dateTime.toLocaleString();
   };
 
 
@@ -45,7 +87,7 @@ export const Tablepages = () => {
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
 
   return (
-    <div className="container mx-auto  py-8">
+    <div className="container mx-auto py-8">
       <div className="mb-4 flex items-center justify-between">
         <input
           type="text"
@@ -59,16 +101,17 @@ export const Tablepages = () => {
         </p>
       </div>
       <div className="overflow-x-auto">
-        <table className="table-auto  w-full border-collapse">
+        <table className="table-auto w-full border-collapse">
           <thead>
             <tr className="bg-gray-200">
               <td className="px-4 py-2 border">ID</td>
               <td className="px-4 py-2 border">URL</td>
               <td className="px-4 py-2 border">Name</td>
               <td className="px-4 py-2 border">Description</td>
+              <td className="px-4 py-2 border">Status</td>
               <td className="px-4 py-2 border">Created</td>
               <td className="px-4 py-2 border">Update</td>
-              <td className="px-4 py-2 border">Accions</td>
+              <td className="px-4 py-2 border">Actions</td>
             </tr>
           </thead>
           <tbody>
@@ -78,12 +121,21 @@ export const Tablepages = () => {
                 <td className="px-4 py-2 border">{user.URL}</td>
                 <td className="px-4 py-2 border">{user.name}</td>
                 <td className="px-4 py-2 border">{user.description}</td>
-                <td className="px-4 py-2 border">{user.created_at}</td>
-                <td className="px-4 py-2 border">{user.updated_at}</td>
-               
+                <td className="px-4 py-2 border">{user.status}</td>
+                <td className="px-4 py-2 border">{formatDate(user.created_at)}</td>
+                <td className="px-4 py-2 border">{formatDate(user.updated_at)}</td>
                 <td className="px-4 py-2 border">
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                  <button
+                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
+                    onClick={() => handleDelete(user.id)}
+                  >
                     Delete
+                  </button>
+                  <button
+                    className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-1"
+                    onClick={() => handleStatusChange(user.id, user.status === 'active' ? 'inactive' : 'active')}
+                  >
+                    Change
                   </button>
                 </td>
               </tr>
@@ -95,7 +147,7 @@ export const Tablepages = () => {
         <button
           onClick={() => handleChangePage(currentPage - 1)}
           disabled={currentPage === 1}
-          className={`  px-4 py-2 rounded ${
+          className={`px-4 py-2 rounded ${
             currentPage === 1
               ? "bg-gray-300 cursor-not-allowed"
               : "bg-gray-200 hover:bg-gray-300"

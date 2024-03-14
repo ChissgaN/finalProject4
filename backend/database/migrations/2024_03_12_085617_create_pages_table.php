@@ -16,8 +16,7 @@ return new class extends Migration
             $table->string('URL');
             $table->string('name');
             $table->text('description');
-            $table->date('date')->nullable();
-
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
     }

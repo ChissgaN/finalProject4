@@ -11,5 +11,6 @@ class Pages extends Model
         'URL',   
         'name',   
         'description',  
+        'status'
     ];
 }

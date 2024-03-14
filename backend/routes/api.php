@@ -28,6 +28,7 @@ Route::put('users/{id}/status', [UsersController::class, 'softDelete']);
 Route::resource('rolls', RollController::class);
 Route::put('rolls/{id}/status', [RollController::class, 'softDelete']);
 Route::resource('pages', PagesController::class);
+Route::put('pages/{id}/status', [PagesController::class, 'softDelete']);
 Route::resource('logs', LogsController::class);
 
 

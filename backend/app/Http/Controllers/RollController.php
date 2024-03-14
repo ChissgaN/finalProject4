@@ -128,13 +128,13 @@ class RollController extends Controller
             $roll->save();
 
             $statusChange = ($newStatus == 'active') ? 'activated' : 'inactivated';
-            $logs = Logs::add("The user with the id: {$roll->id} was $statusChange.");
+            $logs = Logs::add("The Roll with the id: {$roll->id} was $statusChange.");
 
             if (!$logs) {
                 throw new \Exception('Error creating log.');
             }
 
-            return response()->json(['message' => 'User status changed successfully']);
+            return response()->json(['message' => 'Roll status changed successfully']);
         } catch (\Exception $e) {
             return response()->json(['error' => $e->getMessage()], 500);
         }

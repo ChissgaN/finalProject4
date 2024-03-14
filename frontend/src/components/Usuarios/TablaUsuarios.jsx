@@ -29,8 +29,8 @@ export const TablaUsuarios = () => {
     setCurrentPage(1);
   };
 
-  const handleStatusChange = (userId, newStatus) => {
-    fetch(`http://127.0.0.1:8000/api/users/${userId}/status`, {
+  const handleStatusChange = (id, newStatus) => {
+    fetch(`http://127.0.0.1:8000/api/users/${id}/status`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

@@ -118,4 +118,29 @@ class PagesController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+
+    public function softDelete(Request $request, $id)
+    {
+        try {
+            $request->validate([
+                'status' => 'required|in:active,inactive'
+            ]);
+
+            $newStatus = $request->input('status');
+
+            $Pages = Pages::findOrFail($id);
+            $Pages->status = $newStatus;
+            $Pages->save();
+            $statusChange = ($newStatus == 'active') ? 'activated' : 'inactivated';
+            $logs = Logs::add("The Page with the id: {$Pages->id} was $statusChange.");
+
+            if (!$logs) {
+                throw new \Exception('Error creating log.');
+            }
+
+            return response()->json(['message' => 'Pages status changed successfully']);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 }
