@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
-
+use App\Models\Logs;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\User;
@@ -95,7 +95,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
-            /* 'names' => 'required', */
+            
         ]);
         
         if($validator->fails()){
@@ -106,6 +106,12 @@ class AuthController extends Controller
             $validator->validate(),
             ['password' => Hash::make($request->password)]
         ));
+
+        $logs = Logs::add("A new user was registered with the id: {$user->id}");
+
+            if (!$logs) {
+                throw new \Exception();
+            }
 
         return response()->json([
             'message' => '¡Usuario registrado exitosamente!',

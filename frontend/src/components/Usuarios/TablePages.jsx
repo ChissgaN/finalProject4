@@ -1,21 +1,14 @@
 import React, { useState, useEffect } from "react";
 
 
-export const TablaUsuarios = () => {
+export const Tablepages = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
-  const [rolls, setRolls] = useState([]);
+
 
   useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/rolls")
-      .then((response) => response.json())
-      .then((dataRoll) => setRolls(dataRoll))
-      .catch((error) => console.error("Error fetching roles:", error));
-  }, []);
-
-  useEffect(() => {
-    fetch("http://127.0.0.1:8000/api/users")
+    fetch("http://127.0.0.1:8000/api/pages")
       .then((response) => response.json())
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching users:", error));
@@ -30,17 +23,15 @@ export const TablaUsuarios = () => {
     setCurrentPage(1);
   };
 
-  const getRollName = (rollId) => {
-    const roll = rolls.find((roll) => roll.id === rollId);
-    return roll ? roll.name : "";
-  };
 
   const filteredUsers = users.filter((user) => {
     return (
-      (user.email &&
-        user.email.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (user.status &&
-        user.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.URL &&
+        user.URL.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.name &&
+        user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.description &&
+        user.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.created_at && user.created_at.includes(searchTerm)) ||
       (user.roll_id && user.roll_id.toString().includes(searchTerm)) ||
       (user.updated_at && user.updated_at.includes(searchTerm))
@@ -72,28 +63,27 @@ export const TablaUsuarios = () => {
           <thead>
             <tr className="bg-gray-200">
               <td className="px-4 py-2 border">ID</td>
-              <td className="px-4 py-2 border">Email</td>
-              <td className="px-4 py-2 border">Status</td>
-              <td className="px-4 py-2 border">Date</td>
+              <td className="px-4 py-2 border">URL</td>
+              <td className="px-4 py-2 border">Name</td>
+              <td className="px-4 py-2 border">Description</td>
+              <td className="px-4 py-2 border">Created</td>
               <td className="px-4 py-2 border">Update</td>
-              <td className="px-4 py-2 border">Rol</td>
-              <td className="px-4 py-2 border">Change Status</td>
+              <td className="px-4 py-2 border">Accions</td>
             </tr>
           </thead>
           <tbody>
             {currentUsers.map((user) => (
               <tr key={user.id} className="bg-white">
                 <td className="px-4 py-2 border">{user.id}</td>
-                <td className="px-4 py-2 border">{user.email}</td>
-                <td className="px-4 py-2 border">{user.status}</td>
+                <td className="px-4 py-2 border">{user.URL}</td>
+                <td className="px-4 py-2 border">{user.name}</td>
+                <td className="px-4 py-2 border">{user.description}</td>
                 <td className="px-4 py-2 border">{user.created_at}</td>
                 <td className="px-4 py-2 border">{user.updated_at}</td>
+               
                 <td className="px-4 py-2 border">
-                  {getRollName(user.roll_id)}
-                </td>
-                <td className="px-4 py-2 border">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Change
+                  <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                    Delete
                   </button>
                 </td>
               </tr>

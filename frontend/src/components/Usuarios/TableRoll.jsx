@@ -47,7 +47,7 @@ export const TablaRoll = () => {
       <div className="mb-4 flex items-center justify-between">
         <input
           type="text"
-          placeholder="Buscar..."
+          placeholder="Search..."
           value={searchTerm}
           onChange={handleSearch}
           className="p-2 border border-gray-300 rounded-md w-64"
@@ -65,8 +65,7 @@ export const TablaRoll = () => {
               <td className="px-4 py-2 border">Status</td>
               <td className="px-4 py-2 border">Created</td>
               <td className="px-4 py-2 border">Update</td>
-              
-              <td className="px-4 py-2 border">Delete</td>
+              <td className="px-4 py-2 border">Accions</td>
             </tr>
           </thead>
           <tbody>
@@ -79,8 +78,8 @@ export const TablaRoll = () => {
                 <td className="px-4 py-2 border">{user.updated_at}</td>
                
                 <td className="px-4 py-2 border">
-                  <button className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-                    Change
+                  <button className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">
+                    Delete
                   </button>
                 </td>
               </tr>

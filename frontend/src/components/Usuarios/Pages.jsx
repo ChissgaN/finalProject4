@@ -1,21 +1,16 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { TablaRoll } from "./TableRoll";
+import { Tablepages } from "./TablePages";
 
-const Roll = () => {
+const Pages = () => {
   const [modalOpen, setModalOpen] = useState(false);
   
+  const [URL, setURL] = useState("");
   const [name, setName] = useState("");
-  
-  const [rolls, setRolls] = useState([]); 
+  const [description, setDescription] = useState(""); 
 
   useEffect(() => {
     Modal.setAppElement("#root");
-
-    fetch("http://127.0.0.1:8000/api/rolls")
-      .then((response) => response.json())
-      .then((dataRoll) => setRolls(dataRoll))
-      .catch((error) => console.error("Error fetching roles:", error));
   }, []);
  
 
@@ -31,12 +26,13 @@ const Roll = () => {
     event.preventDefault();
 
     const data = {
-      
-      name: name,
+      URL : URL,
+      name : name,
+      description : description
       
     };
 
-    fetch("http://127.0.0.1:8000/api/rolls", {
+    fetch("http://127.0.0.1:8000/api/pages", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -62,12 +58,12 @@ const Roll = () => {
   return (
     <div className="w-full mx-auto">
       <div className="flex justify-between w-[79%] bg-black text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
-        <h2>User Information</h2>
+        <h2>Pages Information</h2>
         <button
           onClick={abrirModal}
           className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
         >
-          Add New Roll
+          Add New Page
         </button>
       </div>
       <Modal
@@ -77,9 +73,9 @@ const Roll = () => {
         overlayClassName="Overlay"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="w-[410px] h-[40%] bg-gray-400 py-[10px] px-[20px] rounded absolute top-0 left-[480px] z-40">
+        <div className="w-[410px] h-[375px] bg-gray-400 py-[10px] px-[20px] rounded absolute top-0 left-[480px] z-40">
           <div className="flex items-center justify-between">
-            <h1 className="">Add Roll</h1>
+            <h1 className="text-gray-100">Add Page</h1>
             <button
               onClick={cerrarModal}
               className="bg-gray-100 hover:bg-gray-300  rounded p-[7px]"
@@ -91,8 +87,23 @@ const Roll = () => {
             
 
             <div className="my-2">
+              <label htmlFor="URL" className="text-gray-600">
+              URL to the new Page
+              </label>
+              <br />
+              <input
+                type="text"
+                id="URL"
+                name="URL"
+                
+                className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
+                onChange={(e) => setURL(e.target.value)}
+              />
+            </div>
+
+            <div className="my-2">
               <label htmlFor="name" className="text-gray-600">
-              Name to the new Roll
+              Name
               </label>
               <br />
               <input
@@ -102,6 +113,21 @@ const Roll = () => {
                 
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setName(e.target.value)}
+              />
+            </div>
+
+            <div className="my-6">
+              <label htmlFor="description" className="text-gray-600">
+              Description
+              </label>
+              <br />
+              <input
+                type="text"
+                id="description"
+                name="description"
+                
+                className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
+                onChange={(e) => setDescription(e.target.value)}
               />
             </div>
 
@@ -122,10 +148,10 @@ const Roll = () => {
         </div>
       </Modal>
       <div className="absolute w-[79%] top-36 ">
-        <TablaRoll />
+        <Tablepages />
       </div>
     </div>
   );
 };
 
-export default Roll;
+export default Pages;

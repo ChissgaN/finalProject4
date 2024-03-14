@@ -86,12 +86,11 @@ class UsersController extends Controller
             'names' => 'required',
             'first_LastName' => 'required',
             'email' => 'required|email|unique:users,email,' . $id,
-            'password' => 'nullable|min:6', // Asegúrate de que la contraseña sea opcional y tenga al menos 6 caracteres
+            'password' => 'nullable|min:3', 
         ]);
 
-        $userData = $request->except('password'); // Excluye la contraseña del conjunto de datos actualizados
+        $userData = $request->except('password');
 
-        // Si se proporciona una contraseña, hasheala y actualiza el campo correspondiente
         if ($request->filled('password')) {
             $userData['password'] = Hash::make($request->password);
         }

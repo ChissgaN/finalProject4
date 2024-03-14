@@ -47,7 +47,7 @@ export const Logs = () => {
       <div className="mb-4 flex items-center justify-between">
         <input
           type="text"
-          placeholder="Buscar..."
+          placeholder="Search..."
           value={searchTerm}
           onChange={handleSearch}
           className="p-2 border border-gray-300 rounded-md w-64"

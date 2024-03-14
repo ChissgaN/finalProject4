@@ -68,12 +68,12 @@ const Usuarios = () => {
   return (
     <div className="w-full mx-auto">
       <div className="flex justify-between w-[79%] bg-black text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
-        <h2>Informacion de Usuario</h2>
+        <h2>User Information</h2>
         <button
           onClick={abrirModal}
           className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
         >
-          Agregar Nuevo Usuario
+          Add New User
         </button>
       </div>
       <Modal
@@ -83,9 +83,9 @@ const Usuarios = () => {
         overlayClassName="Overlay"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="w-[410px] h-[600px] bg-gray-400 py-[10px] px-[20px] rounded absolute top-0 left-[480px] z-40">
+        <div className="w-[410px] h-[650px] bg-gray-400 py-[10px] px-[20px] rounded absolute top-0 left-[480px] z-40">
           <div className="flex items-center justify-between">
-            <h1 className="">Agregar Usuario</h1>
+            <h1 className="text-gray-100">Add User</h1>
             <button
               onClick={cerrarModal}
               className="bg-gray-100 hover:bg-gray-300  rounded p-[7px]"
@@ -103,7 +103,7 @@ const Usuarios = () => {
                 type="email"
                 id="email"
                 name="email"
-                placeholder="Escriba su correo electrónico.."
+                placeholder="Type  your email..."
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -118,7 +118,7 @@ const Usuarios = () => {
                 type="text"
                 id="names"
                 name="names"
-                placeholder="Escriba su primer nombre.."
+                placeholder="Type  your names..."
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setNames(e.target.value)}
               />
@@ -133,7 +133,7 @@ const Usuarios = () => {
                 type="text"
                 id="first_LastName"
                 name="first_LastName"
-                placeholder="Escriba su primer apellido.."
+                placeholder="Type your  first Lastname..."
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setFirst_LastName(e.target.value)}
               />
@@ -148,7 +148,7 @@ const Usuarios = () => {
                 type="text"
                 id="second_LastName"
                 name="second_LastName"
-                placeholder="Escriba su segundo apellido.."
+                placeholder="Type your second Surname"
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setSecond_LastName(e.target.value)}
               />
@@ -179,7 +179,7 @@ const Usuarios = () => {
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setRollId(e.target.value)}
               >
-                <option value="">Select a roll</option>
+                <option disabled value="">Select a Roll</option>
                 {rolls.map((roll) => (
                   <option key={roll.id} value={roll.id}>
                     {roll.name}
@@ -188,11 +188,10 @@ const Usuarios = () => {
               </select>
             </div>
 
-            <p className="py-[8px]">
-              La contraseña por defecto de cada usuario será su{" "}
-              <strong>primer apellido</strong>, indicar que debe efectuar un
-              cambio de contraseña individualmente en el apartado de{" "}
-              <strong>Editar</strong> en <strong>My Profile</strong>
+            <p className="py-[8px] my-4">
+            Each user's default password will be their{" "}
+              <strong>first last name</strong>, You must make a password change individually in the{" "}
+              <strong>Edit seccion</strong> in <strong>My Profile</strong>
             </p>
             <button
               onClick={cerrarModal}

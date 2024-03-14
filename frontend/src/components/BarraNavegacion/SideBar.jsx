@@ -25,7 +25,7 @@ const Sidebar = () => {
       >
         <div>
           <h1 className="mb-10 text-2xl font-bold text-center text-white">
-            Administrador<span className="text-4xl text-[#4791ff]">.</span>
+            Welcome<span className="text-4xl text-[#4791ff]">!</span>
           </h1>
           <ul>
             <li>
@@ -42,7 +42,7 @@ const Sidebar = () => {
                 to="/LayoutAdmin/usuarios"
                 className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
               >
-                < RiLayoutGridLine className="text-[#4791ff]" /> Users
+                <RiCustomerService2Line className="text-[#4791ff]" /> Users
               </Link>
             </li>
             <li>
@@ -50,15 +50,15 @@ const Sidebar = () => {
                 to="/LayoutAdmin/logs"
                 className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <RiCustomerService2Line className="text-[#4791ff]" /> Logs
+                <RiLayoutGridLine className="text-[#4791ff]" /> Logs
               </Link>
             </li>
             <li>
               <Link
-                to="/tickets"
+                to="/LayoutAdmin/pages"
                 className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <RiCustomerService2Line className="text-[#4791ff]" /> Pages
+                <RiEarthLine className="text-[#4791ff]" /> Pages
               </Link>
             </li>
            
@@ -67,9 +67,9 @@ const Sidebar = () => {
         <nav>
           <Link
             to="/"
-            className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
+            className="flex items-center gap-4 py-2 w-full text-white transition-colors rounded-lg hover:bg-secondary-900"
           >
-            <RiLogoutCircleRLine className="text-[#4791ff]" /> Cerrar sesión
+            <RiLogoutCircleRLine className="text-[#4791ff]" /> Log Out
           </Link>
         </nav>
       </div>
