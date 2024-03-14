@@ -81,10 +81,12 @@ class AuthController extends Controller
      */
     protected function respondWithToken($token)
     {
+        $user = auth()->user();
         return response()->json([
             'access_token' => $token,
             'token_type' => 'bearer',
-            'expires_in' => JWTFactory::getTTL() * 60
+            'expires_in' => JWTFactory::getTTL() * 60,
+            'user'=>$user
         ]);
     }
 
@@ -93,7 +95,7 @@ class AuthController extends Controller
         $validator = Validator::make($request->all(), [
             'email' => 'required|string|email|max:100|unique:users',
             'password' => 'required|string|min:6',
-            'names' => 'required',
+            /* 'names' => 'required', */
         ]);
         
         if($validator->fails()){

@@ -80,28 +80,36 @@ class UsersController extends Controller
      * Update the specified resource in storage.
      */
     public function update(Request $request, $id)
-    {
-        try {
-            $request->validate([
-                'names' => 'required',
-                'first_LastName' => 'required',
-                'email' => 'required|email|unique:users,email,' . $id,
-            ]);
+{
+    try {
+        $request->validate([
+            'names' => 'required',
+            'first_LastName' => 'required',
+            'email' => 'required|email|unique:users,email,' . $id,
+            'password' => 'nullable|min:6', // Asegúrate de que la contraseña sea opcional y tenga al menos 6 caracteres
+        ]);
 
-            $user = User::findOrFail($id);
-            $user->update($request->all());
+        $userData = $request->except('password'); // Excluye la contraseña del conjunto de datos actualizados
 
-            $logs = Logs::add("A user with the id {$user->id} was updated.");
-
-            if (!$logs) {
-                throw new \Exception('Error creating log.');
-            }
-
-            return response()->json($user);
-        } catch (\Exception $e) {
-            return response()->json(['error' => $e->getMessage()], 500);
+        // Si se proporciona una contraseña, hasheala y actualiza el campo correspondiente
+        if ($request->filled('password')) {
+            $userData['password'] = Hash::make($request->password);
         }
+
+        $user = User::findOrFail($id);
+        $user->update($userData);
+
+        $logs = Logs::add("A user with the id {$user->id} was updated.");
+
+        if (!$logs) {
+            throw new \Exception('Error creating log.');
+        }
+
+        return response()->json($user);
+    } catch (\Exception $e) {
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
 
     /**
      * Change user status.
