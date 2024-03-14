@@ -30,7 +30,7 @@ const Sidebar = () => {
           <ul>
             <li>
               <Link
-                to="/dashboard"
+                to="/LayoutAdmin/Roll"
                 className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
               >
                 <LuLayoutDashboard className="text-[#4791ff]" />
@@ -47,7 +47,7 @@ const Sidebar = () => {
             </li>
             <li>
               <Link
-                to="/tickets"
+                to="/LayoutAdmin/logs"
                 className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
               >
                 <RiCustomerService2Line className="text-[#4791ff]" /> Logs
