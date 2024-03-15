@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const TablaRoll = () => {
   const [rolls, setRolls] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetchRoles();
@@ -64,8 +73,10 @@ export const TablaRoll = () => {
 
   const filteredUsers = rolls.filter((roll) => {
     return (
-      (roll.name && roll.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
-      (roll.status && roll.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (roll.name &&
+        roll.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (roll.status &&
+        roll.status.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (roll.created_at && roll.created_at.includes(searchTerm)) ||
       (roll.updated_at && roll.updated_at.includes(searchTerm))
     );
@@ -76,8 +87,6 @@ export const TablaRoll = () => {
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentUsers = filteredUsers.slice(indexOfFirstItem, indexOfLastItem);
-
-  
 
   return (
     <div className="container mx-auto  py-8">
@@ -96,7 +105,7 @@ export const TablaRoll = () => {
       <div className="overflow-x-auto">
         <table className="table-auto  w-full border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-[#F49CBB]">
               <td className="px-4 py-2 border">ID</td>
               <td className="px-4 py-2 border">Name</td>
               <td className="px-4 py-2 border">Status</td>
@@ -110,10 +119,22 @@ export const TablaRoll = () => {
               <tr key={roll.id} className="bg-white">
                 <td className="px-4 py-2 border">{roll.id}</td>
                 <td className="px-4 py-2 border">{roll.name}</td>
-                <td className="px-4 py-2 border">{roll.status}</td>
-                <td className="px-4 py-2 border">{formatDateTime(roll.created_at)}</td>
-                <td className="px-4 py-2 border">{formatDateTime(roll.updated_at)}</td>
-               
+                <td className="px-4 py-2 border">
+                  <div
+                    className={`rounded-md flex justify-center ${
+                      roll.status === "active" ? "bg-[#8CFBDE]" : "bg-[#DD2D4A]"
+                    }`}
+                  >
+                    {roll.status}
+                  </div>
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDateTime(roll.created_at)}
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDateTime(roll.updated_at)}
+                </td>
+
                 <td className="px-4 py-2 border">
                   <button
                     onClick={() => handleDelete(roll.id)}
@@ -122,7 +143,12 @@ export const TablaRoll = () => {
                     Delete
                   </button>
                   <button
-                    onClick={() => handleStatusChange(roll.id, roll.status === "active" ? "inactive" : "active")}
+                    onClick={() =>
+                      handleStatusChange(
+                        roll.id,
+                        roll.status === "active" ? "inactive" : "active"
+                      )
+                    }
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-2"
                   >
                     Change
@@ -139,8 +165,8 @@ export const TablaRoll = () => {
           disabled={currentPage === 1}
           className={`  px-4 py-2 rounded ${
             currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Previous
@@ -150,8 +176,8 @@ export const TablaRoll = () => {
           disabled={currentPage === totalPages}
           className={`ml-4 px-4 py-2 rounded ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Next

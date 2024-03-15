@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { TablaUsuarios } from "./TablaUsuarios";
+import { TableUser } from "./TableUser";
+import { useNavigate } from "react-router-dom";
 
 const Usuarios = () => {
   const [modalOpen, setModalOpen] = useState(false);
@@ -10,7 +11,15 @@ const Usuarios = () => {
   const [second_LastName, setSecond_LastName] = useState("");
   const [birthday, setBirthday] = useState("");
   const [rollId, setRollId] = useState("");
-  const [rolls, setRolls] = useState([]); 
+  const [rolls, setRolls] = useState([]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -20,7 +29,6 @@ const Usuarios = () => {
       .then((dataRoll) => setRolls(dataRoll))
       .catch((error) => console.error("Error fetching roles:", error));
   }, []);
- 
 
   const abrirModal = () => {
     setModalOpen(true);
@@ -39,7 +47,7 @@ const Usuarios = () => {
       first_LastName: first_LastName,
       second_LastName: second_LastName,
       birthday: birthday,
-      roll_id: rollId, 
+      roll_id: rollId,
     };
 
     fetch("http://127.0.0.1:8000/api/users", {
@@ -67,8 +75,8 @@ const Usuarios = () => {
 
   return (
     <div className="w-full mx-auto">
-      <div className="flex justify-between w-[79%] bg-black text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
-        <h2>User Information</h2>
+      <div className="flex justify-between w-[79%] bg-[#CBEEF3] text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
+        <h2 className="text-black">User Information</h2>
         <button
           onClick={abrirModal}
           className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
@@ -179,7 +187,9 @@ const Usuarios = () => {
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setRollId(e.target.value)}
               >
-                <option disabled value="">Select a Roll</option>
+                <option disabled value="">
+                  Select a Roll
+                </option>
                 {rolls.map((roll) => (
                   <option key={roll.id} value={roll.id}>
                     {roll.name}
@@ -189,9 +199,10 @@ const Usuarios = () => {
             </div>
 
             <p className="py-[8px] my-4">
-            Each user's default password will be their{" "}
-              <strong>first last name</strong>, You must make a password change individually in the{" "}
-              <strong>Edit seccion</strong> in <strong>My Profile</strong>
+              Each user's default password will be their{" "}
+              <strong>first last name</strong>, You must make a password change
+              individually in the <strong>Edit seccion</strong> in{" "}
+              <strong>My Profile</strong>
             </p>
             <button
               onClick={cerrarModal}
@@ -209,7 +220,7 @@ const Usuarios = () => {
         </div>
       </Modal>
       <div className="absolute w-[79%] top-36 ">
-        <TablaUsuarios />
+        <TableUser />
       </div>
     </div>
   );

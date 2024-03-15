@@ -1,18 +1,26 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { Tablepages } from "./TablePages";
+import { useNavigate } from "react-router-dom";
 
 const Pages = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  
+
   const [URL, setURL] = useState("");
   const [name, setName] = useState("");
-  const [description, setDescription] = useState(""); 
+  const [description, setDescription] = useState("");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     Modal.setAppElement("#root");
   }, []);
- 
 
   const abrirModal = () => {
     setModalOpen(true);
@@ -26,10 +34,9 @@ const Pages = () => {
     event.preventDefault();
 
     const data = {
-      URL : URL,
-      name : name,
-      description : description
-      
+      URL: URL,
+      name: name,
+      description: description,
     };
 
     fetch("http://127.0.0.1:8000/api/pages", {
@@ -57,8 +64,8 @@ const Pages = () => {
 
   return (
     <div className="w-full mx-auto">
-      <div className="flex justify-between w-[79%] bg-black text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
-        <h2>Pages Information</h2>
+      <div className="flex justify-between w-[79%] bg-[#CBEEF3] text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
+        <h2 className="text-black">Pages Information</h2>
         <button
           onClick={abrirModal}
           className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
@@ -84,18 +91,15 @@ const Pages = () => {
             </button>
           </div>
           <form onSubmit={handleSubmit}>
-            
-
             <div className="my-2">
               <label htmlFor="URL" className="text-gray-600">
-              URL to the new Page
+                URL to the new Page
               </label>
               <br />
               <input
                 type="text"
                 id="URL"
                 name="URL"
-                
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setURL(e.target.value)}
               />
@@ -103,14 +107,13 @@ const Pages = () => {
 
             <div className="my-2">
               <label htmlFor="name" className="text-gray-600">
-              Name
+                Name
               </label>
               <br />
               <input
                 type="text"
                 id="name"
                 name="name"
-                
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setName(e.target.value)}
               />
@@ -118,19 +121,17 @@ const Pages = () => {
 
             <div className="my-6">
               <label htmlFor="description" className="text-gray-600">
-              Description
+                Description
               </label>
               <br />
               <input
                 type="text"
                 id="description"
                 name="description"
-                
                 className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setDescription(e.target.value)}
               />
             </div>
-
 
             <button
               onClick={cerrarModal}

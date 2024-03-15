@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Icons } from "../Icons/Icons";
 import { useNavigate } from "react-router-dom";
 
@@ -6,19 +6,23 @@ export const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [user, setUser] = useState("");
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Datos a enviar al backend
     const data = {
       email: email,
       password: password,
-      user: user
+      user: user,
     };
 
-    // Solicitud POST al backend
     fetch("http://127.0.0.1:8000/api/auth/login", {
       method: "POST",
       headers: {
@@ -33,23 +37,21 @@ export const Login = () => {
         return response.json();
       })
       .then((data) => {
-        // Manejar la respuesta del backend
         console.log(data.user);
         localStorage.setItem("token", data.access_token);
         localStorage.setItem("InfoUser", JSON.stringify(data.user));
-        // Aquí puedes hacer algo con la respuesta, como redirigir al usuario
+
         navigate("/LayoutAdmin/DashBoard");
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        // Manejar errores de red o errores en el backend
       });
   };
 
   return (
     <>
-      <section className="flex flex-col items-center justify-center mt-[60px]">
-        <div className="w-[473.83px] h-[600px] top-[253.65px] left-[483.08px] rounded-[24px] border-slate-200 border-[1px] px-[60px]">
+      <section className=" flex flex-col items-center justify-center ">
+        <div className="bg-[#CBEEF3] w-[473.83px] h-[600px] top-[253.65px] left-[483.08px] rounded-[24px] border-[#F26A8D] border-[1px] px-[60px]">
           <form onSubmit={handleSubmit}>
             <div className="my-[40px]">
               <img
@@ -64,7 +66,7 @@ export const Login = () => {
                 </h1>
               </div>
 
-              <div className="w-[356.48px] h-[48px] top-[399.79px] left-[541.66px] rounded-[8px] border-slate-200 border-[1px] py-[10px] mb-[15px] flex items-center px-[10px]">
+              <div className="w-[356.48px] h-[48px] top-[399.79px] left-[541.66px] rounded-[8px] border-[#F26A8D] border-[1px] py-[10px] mb-[15px] flex items-center px-[10px]">
                 <span className="material-symbols-outlined text-gray-500">
                   mail
                 </span>
@@ -74,13 +76,13 @@ export const Login = () => {
                   placeholder="Email"
                   required
                   autoComplete="off"
-                  value={email} // Aquí se enlaza el valor del input con el estado email
-                  onChange={(e) => setEmail(e.target.value)} // Aquí se actualiza el estado email cuando el usuario escribe en el input
-                  className="w-[90%] h-[100%] px-[10px] focus:outline-none"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-[90%] h-[100%] px-[10px] focus:outline-none bg-[#CBEEF3]"
                 />
               </div>
 
-              <div className="w-[356.48px] h-[48px] top-[399.79px] left-[541.66px] rounded-[8px] border-slate-200 border-[1px] py-[10px] mb-[15px] flex items-center px-[10px]">
+              <div className="w-[356.48px] h-[48px] top-[399.79px] left-[541.66px] rounded-[8px] border-[#F26A8D] border-[1px] py-[10px] mb-[15px] flex items-center px-[10px]">
                 <span className="material-symbols-outlined text-gray-500">
                   lock
                 </span>
@@ -90,9 +92,9 @@ export const Login = () => {
                   name="password"
                   required
                   autoComplete="off"
-                  value={password} // Aquí se enlaza el valor del input con el estado password
-                  onChange={(e) => setPassword(e.target.value)} // Aquí se actualiza el estado password cuando el usuario escribe en el input
-                  className="w-[90%] h-[100%] px-[10px] focus:outline-none"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  className="w-[90%] h-[100%] px-[10px] focus:outline-none bg-[#CBEEF3]"
                 />
               </div>
 
@@ -125,8 +127,12 @@ export const Login = () => {
                   <Icons srcIcons="./public/Gihub.svg" altIcons="github Icon" />
                 </div>
                 <div className="text-[14px] font-[400] items-center flex text-gray-500 justify-center">
-                  <p>Don’t have an account yet?</p>
-                  <a href="/Structure.jsx" className="hover:text-sky-500">
+                  <p className="">Don’t have an account yet?</p>
+
+                  <a
+                    href="/Register.jsx"
+                    className="hover:text-sky-500 ml-1 text-[#880D1E]"
+                  >
                     Register
                   </a>
                 </div>
@@ -138,7 +144,7 @@ export const Login = () => {
           <p>
             created by{" "}
             <a href="#" className="no-underline hover:text-sky-500">
-              DerekMoscui
+              ChissgaN
             </a>
           </p>
           <p>devChallenges.io</p>

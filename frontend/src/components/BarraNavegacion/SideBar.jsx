@@ -1,13 +1,10 @@
 import React, { useState } from "react";
-import { BrowserRouter as Router, Link } from "react-router-dom"; // Importa BrowserRouter y Link desde react-router-dom
-// Icons
+import { BrowserRouter as Router, Link, useNavigate } from "react-router-dom";
 import {
-   RiLayoutGridLine,
+  RiLayoutGridLine,
   RiEarthLine,
   RiCustomerService2Line,
-  RiCalendarTodoLine,
   RiLogoutCircleRLine,
-  RiArrowRightSLine,
   RiMenu3Line,
   RiCloseLine,
 } from "react-icons/ri";
@@ -16,60 +13,75 @@ import { LuLayoutDashboard } from "react-icons/lu";
 const Sidebar = () => {
   const [showMenu, setShowMenu] = useState(false);
   const [showSubmenu, setShowSubmenu] = useState(false);
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+
+    window.location.href = "/";
+
+    const navigate = useNavigate();
+    useEffect(() => {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        navigate("/");
+      }
+    }, [navigate]);
+  };
+
   return (
     <>
       <div
-        className={`xl:h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto h-full top-0 bg-[#0A0A0A] p-4 flex flex-col justify-between z-50 ${
+        className={`xl:h-[100vh] overflow-y-scroll fixed xl:static w-[80%] md:w-[40%] lg:w-[30%] xl:w-auto h-full top-0 bg-[#880d1e] p-4 flex flex-col justify-between z-50 ${
           showMenu ? "left-0" : "-left-full"
         } transition-all`}
       >
         <div>
           <h1 className="mb-10 text-2xl font-bold text-center text-white">
-            Welcome<span className="text-4xl text-[#4791ff]">!</span>
+            Welcome<span className="text-4xl text-[#f6e27f]">!</span>
           </h1>
           <ul>
             <li>
               <Link
                 to="/LayoutAdmin/Roll"
-                className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
+                className="flex items-center gap-4 px-4 py-2 text-[#f6e27f] transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <LuLayoutDashboard className="text-[#4791ff]" />
+                <LuLayoutDashboard className="text-[#f6e27f]" />
                 Rolls
               </Link>
             </li>
             <li>
               <Link
                 to="/LayoutAdmin/usuarios"
-                className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
+                className="flex items-center gap-4 px-4 py-2 text-[#f6e27f] transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <RiCustomerService2Line className="text-[#4791ff]" /> Users
+                <RiCustomerService2Line className="text-[#f6e27f]" /> Users
               </Link>
             </li>
             <li>
               <Link
                 to="/LayoutAdmin/logs"
-                className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
+                className="flex items-center gap-4 px-4 py-2 text-[#f6e27f] transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <RiLayoutGridLine className="text-[#4791ff]" /> Logs
+                <RiLayoutGridLine className="text-[#f6e27f]" /> Logs
               </Link>
             </li>
             <li>
               <Link
                 to="/LayoutAdmin/pages"
-                className="flex items-center gap-4 px-4 py-2 text-white transition-colors rounded-lg hover:bg-secondary-900"
+                className="flex items-center gap-4 px-4 py-2 text-[#f6e27f] transition-colors rounded-lg hover:bg-secondary-900"
               >
-                <RiEarthLine className="text-[#4791ff]" /> Pages
+                <RiEarthLine className="text-[#f6e27f]" /> Pages
               </Link>
             </li>
-           
           </ul>
         </div>
         <nav>
           <Link
             to="/"
             className="flex items-center gap-4 py-2 w-full text-white transition-colors rounded-lg hover:bg-secondary-900"
+            onClick={handleLogout}
           >
-            <RiLogoutCircleRLine className="text-[#4791ff]" /> Log Out
+            <RiLogoutCircleRLine className="text-[#f6e27f] font-[40px]" /> Log
+            Out
           </Link>
         </nav>
       </div>
@@ -79,10 +91,8 @@ const Sidebar = () => {
       >
         {showMenu ? <RiCloseLine /> : <RiMenu3Line />}
       </button>
-
-      </>
+    </>
   );
 };
 
 export default Sidebar;
-   

@@ -1,11 +1,18 @@
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 
 export const Logs = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
 
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/logs")
@@ -23,16 +30,14 @@ export const Logs = () => {
     setCurrentPage(1);
   };
 
-
   const filteredUsers = users.filter((user) => {
     return (
-        (user.id && user.id.toString().includes(searchTerm)) ||
+      (user.id && user.id.toString().includes(searchTerm)) ||
       (user.description &&
         user.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.date &&
         user.date.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.hour && user.hour.includes(searchTerm))
-      
     );
   });
 
@@ -59,7 +64,7 @@ export const Logs = () => {
       <div className="overflow-x-auto">
         <table className="table-auto  w-full border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-[#F49CBB]">
               <td className="px-4 py-2 border">ID</td>
               <td className="px-4 py-2 border">Description</td>
               <td className="px-4 py-2 border">Date</td>
@@ -84,8 +89,8 @@ export const Logs = () => {
           disabled={currentPage === 1}
           className={`  px-4 py-2 rounded ${
             currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Previous
@@ -95,8 +100,8 @@ export const Logs = () => {
           disabled={currentPage === totalPages}
           className={`ml-4 px-4 py-2 rounded ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Next

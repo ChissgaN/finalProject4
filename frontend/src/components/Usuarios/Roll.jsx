@@ -1,13 +1,22 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { TablaRoll } from "./TableRoll";
+import { useNavigate } from "react-router-dom";
 
 const Roll = () => {
   const [modalOpen, setModalOpen] = useState(false);
-  
+
   const [name, setName] = useState("");
-  
-  const [rolls, setRolls] = useState([]); 
+
+  const [rolls, setRolls] = useState([]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     Modal.setAppElement("#root");
@@ -17,7 +26,6 @@ const Roll = () => {
       .then((dataRoll) => setRolls(dataRoll))
       .catch((error) => console.error("Error fetching roles:", error));
   }, []);
- 
 
   const abrirModal = () => {
     setModalOpen(true);
@@ -31,9 +39,7 @@ const Roll = () => {
     event.preventDefault();
 
     const data = {
-      
       name: name,
-      
     };
 
     fetch("http://127.0.0.1:8000/api/rolls", {
@@ -60,9 +66,9 @@ const Roll = () => {
   };
 
   return (
-    <div className="w-full mx-auto">
-      <div className="flex justify-between w-[79%] bg-black text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
-        <h2>User Information</h2>
+    <div className="w-full mx-auto ">
+      <div className="flex justify-between w-[79%] bg-[#CBEEF3] text-white late-300 items-center h-[70px]  rounded-[10px] px-10 my-12 absolute top-8">
+        <h1 className="text-[#0D160B]">User Information</h1>
         <button
           onClick={abrirModal}
           className="bg-blue-500 hover:bg-blue-700 text-white  py-2 px-4 rounded"
@@ -77,34 +83,30 @@ const Roll = () => {
         overlayClassName="Overlay"
         shouldCloseOnOverlayClick={true}
       >
-        <div className="w-[410px] h-[40%] bg-gray-400 py-[10px] px-[20px] rounded absolute top-0 left-[480px] z-40">
+        <div className="w-[410px] h-[40%] bg-gray-400 py-[10px] px-[20px] rounded absolute top-14 left-[480px] z-40">
           <div className="flex items-center justify-between">
-            <h1 className="">Add Roll</h1>
+            <h1 className="text-white">Add Roll</h1>
             <button
               onClick={cerrarModal}
-              className="bg-gray-100 hover:bg-gray-300  rounded p-[7px]"
+              className="bg-gray-100 hover:bg-gray-300  rounded p-[10px]"
             >
               x
             </button>
           </div>
           <form onSubmit={handleSubmit}>
-            
-
             <div className="my-2">
-              <label htmlFor="name" className="text-gray-600">
-              Name to the new Roll
+              <label htmlFor="name" className="text-black">
+                Name to the new Roll
               </label>
               <br />
               <input
                 type="text"
                 id="name"
                 name="name"
-                
-                className="focus:outline-none w-full h-10 px-3 border rounded-lg border-gray-300"
+                className="focus:outline-none  my-3 w-full h-10 px-3 border rounded-lg border-gray-300"
                 onChange={(e) => setName(e.target.value)}
               />
             </div>
-
 
             <button
               onClick={cerrarModal}

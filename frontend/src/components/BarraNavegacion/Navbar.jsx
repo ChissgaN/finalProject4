@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-
+import { useNavigate } from "react-router-dom";
 import {
   RiNotification3Line,
   RiArrowDownSLine,
@@ -13,29 +13,44 @@ import "@szhsin/react-menu/dist/index.css";
 import "@szhsin/react-menu/dist/transitions/slide.css";
 import { Link } from "react-router-dom";
 
-const BarraNavegacion = () => {
+const Navbar = () => {
   const [userData, setUserData] = useState(null);
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+
+    window.location.href = "/";
+  };
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
+
+  
 
   useEffect(() => {
     const userDataString = localStorage.getItem("InfoUser");
     if (userDataString) {
       const userData = JSON.parse(userDataString);
       if (typeof userData === "object" && !Array.isArray(userData)) {
-        // Convertir el objeto userData en un array
         setUserData([userData]);
       } else {
-        // Si userData ya es un array, simplemente establecerlo
         setUserData(userData);
       }
     }
   }, []);
+
   return (
     <header className="flex justify-between h-[7vh] md:h-[10vh] border-b  p-8 items-center bg-white">
-      {/* Agregamos los botones Lista y Artículos */}
       <div className="flex items-center justify-between gap-8 text-white ">
-        <button className="text-[#6b6f77] font-semibold transition-colors btn hover:text-gray-400">
-          Home
-        </button>
+        <Link to="/LayoutAdmin/dashboard">
+          <button className="text-[#6b6f77] font-semibold transition-colors btn hover:text-gray-400">
+            Home
+          </button>
+        </Link>
       </div>
 
       <nav className="flex items-center gap-2">
@@ -51,8 +66,7 @@ const BarraNavegacion = () => {
           align="end"
           arrow
           transition
-          arrowClassName="bg-secondary-100"
-          menuClassName="bg-secondary-100 p-4"
+          menuClassName="bg-secondary-200 p-4"
         >
           <h1 className="font-medium text-center text-gray-300">
             Notificaciones (2)
@@ -65,15 +79,13 @@ const BarraNavegacion = () => {
             >
               <img
                 src="https://img.freepik.com/vector-gratis/grupo-personas-sonrientes-felices-mirando-vista-superior-ilustracion-vector-plano-fondo-blanco_1284-78599.jpg"
-                className="object-cover w-8 h-8 rounded-full"
+                className="object-cover w-8 h-8 rounded-full bg-[#8CFBDE]"
               />
               <div className="flex flex-col text-sm">
                 <div className="flex items-center justify-between gap-4 text-white">
                   <span>11</span> <span className="text-[8px]">28/02/2024</span>
                 </div>
-                <p className="text-xs text-gray-500">
-                  Lorem ipsum dolor sit amet...
-                </p>
+                <p className="text-xs text-gray-500">Roles</p>
               </div>
             </Link>
           </MenuItem>
@@ -119,7 +131,7 @@ const BarraNavegacion = () => {
         </Menu>
         <Menu
           menuButton={
-            <MenuButton className="flex items-center p-2 transition-colors rounded-lg gap-x-2 hover:bg-red-100">
+            <MenuButton className="flex items-center p-2 transition-colors rounded-lg gap-x-2 hover:bg-[#F6E27F]">
               <img
                 src="https://img.freepik.com/vector-gratis/grupo-personas-sonrientes-felices-mirando-vista-superior-ilustracion-vector-plano-fondo-blanco_1284-78599.jpg"
                 className="object-cover w-6 h-6 rounded-full"
@@ -144,7 +156,6 @@ const BarraNavegacion = () => {
           }
           align="end"
           arrow
-          arrowClassName="bg-secondary-100"
           transition
           menuClassName="bg-secondary-100 p-4"
         >
@@ -153,23 +164,21 @@ const BarraNavegacion = () => {
               to="/LayoutAdmin/Info"
               className="flex items-center flex-1 px-6 py-2 text-gray-300 transition-colors rounded-lg hover:bg-secondary-900 gap-x-4"
             >
-              
-
               <div className="flex flex-col text-sm">
                 <span className="text-xs text-gray-500">
-                {userData && (
-                  <div>
-                    {userData.map((user, index) => (
-                      <div key={index}>
-                        {user.names ? (
-                          <p className="text-lg">{user.names}</p>
-                        ) : (
-                          <p className="text-lg">{user.email}</p>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
+                  {userData && (
+                    <div>
+                      {userData.map((user, index) => (
+                        <div key={index}>
+                          {user.names ? (
+                            <p className="text-lg">{user.names}</p>
+                          ) : (
+                            <p className="text-lg">{user.email}</p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </span>
               </div>
             </Link>
@@ -178,10 +187,12 @@ const BarraNavegacion = () => {
 
           <MenuItem className="p-0 hover:bg-transparent">
             <Link
-              to="/cerrar-sesion"
+              to="/"
               className="flex items-center flex-1 px-6 py-2 text-gray-300 transition-colors rounded-lg hover:bg-secondary-900 gap-x-4"
+              onClick={handleLogout}
             >
-              <RiLogoutCircleRLine /> Cerrar sesión
+              <RiLogoutCircleRLine className="text-[#F26A8D]" />{" "}
+              <p className="text-[#F26A8D]">Log Out</p>
             </Link>
           </MenuItem>
         </Menu>
@@ -190,4 +201,4 @@ const BarraNavegacion = () => {
   );
 };
 
-export default BarraNavegacion;
+export default Navbar;

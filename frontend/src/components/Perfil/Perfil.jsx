@@ -12,6 +12,22 @@ export const Perfil = () => {
   const [birthday, setBirthday] = useState("");
   const navigate = useNavigate();
   const [userData, setUserData] = useState(null);
+  const [rollId, setRollId] = useState("");
+  const [rolls, setRolls] = useState([]);
+
+  useEffect(() => {
+    fetch("http://127.0.0.1:8000/api/rolls")
+      .then((response) => response.json())
+      .then((dataRoll) => setRolls(dataRoll))
+      .catch((error) => console.error("Error fetching roles:", error));
+  }, []);
+
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     const userDataString = localStorage.getItem("InfoUser");
@@ -24,7 +40,6 @@ export const Perfil = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    // Datos a enviar al backend
     const data = {
       email: email,
       password: password,
@@ -32,9 +47,9 @@ export const Perfil = () => {
       first_LastName: first_LastName,
       second_LastName: second_LastName,
       birthday: birthday,
+      roll_id: rollId,
     };
 
-    // Solicitud POST al backend
     fetch(`http://127.0.0.1:8000/api/users/${userData.id}`, {
       method: "PUT",
       headers: {
@@ -49,10 +64,8 @@ export const Perfil = () => {
         return response.json();
       })
       .then((data) => {
-        // Manejar la respuesta del backend
-        console.log(data );
+        console.log(data);
         localStorage.setItem("InfoUser", JSON.stringify(data));
-        // Aquí puedes hacer algo con la respuesta, como redirigir al usuario
 
         setEmail("");
         setPassword("");
@@ -65,41 +78,38 @@ export const Perfil = () => {
       })
       .catch((error) => {
         console.error("There was an error!", error);
-        // Manejar errores de red o errores en el backend
       });
-      <div className="hidden">
-      <Info 
-      userData1= {data}
-      
-      />
-      </div>
+    <div className="hidden">
+      <Info userData1={data} />
+    </div>;
   };
 
   return (
     <>
-      <div className=" w-[600px] pt-4 m-auto mt-12 relative ">
-        <a href="/LayoutAdmin/Info" className="text-sky-500 absolute left-9 top-0 ">
+      <div className=" w-[600px] pt-4 m-auto relative ">
+        <a
+          href="/LayoutAdmin/Info"
+          className="text-sky-500 absolute left-[-200px] top-0 "
+        >
           Back
         </a>
-        <section className="">
-          <section className="w-[550px] rounded-[12px] border-gray-200 border-[1px] mt-[10px] px-[40px] ">
-            <h2 className="text-[24px] mt-[25px]">Change Info</h2>
-            {/* <p className="text-[13px] text-gray-500 pt-[7px]">
-              Changes will be reflected to every services
-            </p> */}
+        <section className="absolute top-[-12px]">
+          <section className="w-[550px] rounded-[12px] border-gray-200 border-[1px] px-[20px] ">
+            <h2 className="text-[24px] mt-[10px]">Change Info</h2>
+
             <form onSubmit={handleSubmit}>
-              <div className="my-[15px]">
-                <label htmlFor="email" className="text-gray-600">
-                  Usuario/Correo
+              <div className="my-[10px]">
+                <label htmlFor="email" className="text-gray-600 mb-0">
+                  Email
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200 items-center flex ">
                   <input
                     type="text"
                     id="email"
                     name="email"
-                    placeholder="Escriba su correo.."
-                    className="focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your Email..."
+                    className="focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
@@ -109,17 +119,17 @@ export const Perfil = () => {
               </div>
 
               <div className="my-[15px]">
-                <label htmlFor="names" className="text-gray-600">
-                  Nombres
+                <label htmlFor="names" className="text-gray-600 mb-0">
+                  Names
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200 items-center flex ">
                   <input
                     type="text"
                     id="names"
                     name="names"
-                    placeholder="Escriba su nombres.."
-                    className=" focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your names..."
+                    className=" focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={names}
                     onChange={(e) => setNames(e.target.value)}
@@ -128,17 +138,17 @@ export const Perfil = () => {
                 </div>
               </div>
               <div className="my-[15px]">
-                <label htmlFor="first_LastName" className="text-gray-600">
-                  Primer Apellido
+                <label htmlFor="first_LastName" className="text-gray-600 mb-0">
+                  First Lastame
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200 items-center flex ">
                   <input
                     type="text"
                     id="first_LastName"
                     name="first_LastName"
-                    placeholder="Escriba su primer apellido.."
-                    className=" focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your First Lastname..."
+                    className=" focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={first_LastName}
                     onChange={(e) => setFirst_LastName(e.target.value)}
@@ -147,17 +157,17 @@ export const Perfil = () => {
                 </div>
               </div>
               <div className="my-[15px]">
-                <label htmlFor="second_LastName	" className="text-gray-600">
-                  Segundo Apellido
+                <label htmlFor="second_LastName	" className="text-gray-600 mb-0">
+                  Second Surname
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200 items-center flex ">
                   <input
                     type="text"
                     id="second_LastName	"
                     name="second_LastName	"
-                    placeholder="Escriba su segundo apellido.."
-                    className=" focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your second surname..."
+                    className=" focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={second_LastName}
                     onChange={(e) => setSecond_LastName(e.target.value)}
@@ -167,17 +177,17 @@ export const Perfil = () => {
               </div>
 
               <div className="my-[15px]">
-                <label htmlFor="birthday" className="text-gray-600">
-                  Fecha de Nacimiento
+                <label htmlFor="birthday" className="text-gray-600 mb-0">
+                  Date of Birth
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200  items-center flex ">
                   <input
                     type="date"
                     id="birthday"
                     name="birthday"
-                    placeholder="Escriba su fecha de nacimiento.."
-                    className=" focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your date of birth..."
+                    className=" focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={birthday}
                     onChange={(e) => setBirthday(e.target.value)}
@@ -186,44 +196,52 @@ export const Perfil = () => {
                 </div>
               </div>
 
-
               <div className="my-[15px]">
-                <label htmlFor="password" className="text-gray-600">
-                  Contraseña
+                <label htmlFor="password" className="text-gray-600 mb-0">
+                  Password
                 </label>
                 <br />
-                <div className="w-[400px] h-[45px] rounded-[12px] border-[1px] border-gray-200 mt-[5px] items-center flex ">
+                <div className="w-[400px] h-[35px] rounded-[12px] border-[1px] border-gray-200 items-center flex ">
                   <input
                     type="password"
                     id="password"
                     name="password"
-                    placeholder="Escriba su contraseña.."
-                    className=" focus:outline-none w-[90%] h-[80%] px-3 bg-transparent"
+                    placeholder="Type your password..."
+                    className=" focus:outline-none w-[90%] h-[50%] px-3 bg-transparent mt-0"
                     autoComplete="off"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                   <br />
                 </div>
+                <div className="flex">
+                  <select
+                    id="rollId"
+                    name="rollId"
+                    value={rollId}
+                    className="focus:outline-none w-[250px] h-[30px] px-3 border rounded-lg border-gray-300 mt-3"
+                    onChange={(e) => setRollId(e.target.value)}
+                  >
+                    <option disabled value="">
+                      Select a Roll
+                    </option>
+                    {rolls.map((roll) => (
+                      <option key={roll.id} value={roll.id}>
+                        {roll.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               </div>
               <button
                 type="submit"
-                className=" w-[82px] h-[38px] rounded-[8px] bg-sky-500 text-white text-[16px] mt-[15px] hover:bg-sky-400 mb-[50px]"
+                className=" w-[82px] h-[38px] rounded-[8px] bg-sky-500 text-white text-[16px] mt-[5px] hover:bg-sky-400 mb-[50px]"
               >
                 Save
               </button>
             </form>
           </section>
         </section>
-        <div className="text-[14px] flex justify-between mt-[15px] text-gray-400 ">
-          <p>
-            created by{" "}
-            <a href="#" className="text-gray-600">
-              DerekMoscui
-            </a>
-          </p>
-          <p>devChallenges.io</p>
-        </div>
       </div>
     </>
   );

@@ -1,9 +1,18 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 export const Tablepages = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/pages")
@@ -11,7 +20,7 @@ export const Tablepages = () => {
       .then((data) => setUsers(data))
       .catch((error) => console.error("Error fetching users:", error));
   }, []);
-  
+
   const handleStatusChange = (id, newStatus) => {
     fetch(`http://127.0.0.1:8000/api/pages/${id}/status`, {
       method: "PUT",
@@ -21,8 +30,7 @@ export const Tablepages = () => {
       body: JSON.stringify({ status: newStatus }),
     })
       .then((response) => {
-        if (response.ok) 
-        {
+        if (response.ok) {
           window.location.reload();
           setCurrentPage(1);
         } else {
@@ -65,11 +73,9 @@ export const Tablepages = () => {
     return dateTime.toLocaleString();
   };
 
-
   const filteredUsers = users.filter((user) => {
     return (
-      (user.URL &&
-        user.URL.toLowerCase().includes(searchTerm.toLowerCase())) ||
+      (user.URL && user.URL.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.name &&
         user.name.toLowerCase().includes(searchTerm.toLowerCase())) ||
       (user.description &&
@@ -103,7 +109,7 @@ export const Tablepages = () => {
       <div className="overflow-x-auto">
         <table className="table-auto w-full border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-[#F49CBB]">
               <td className="px-4 py-2 border">ID</td>
               <td className="px-4 py-2 border">URL</td>
               <td className="px-4 py-2 border">Name</td>
@@ -121,9 +127,21 @@ export const Tablepages = () => {
                 <td className="px-4 py-2 border">{user.URL}</td>
                 <td className="px-4 py-2 border">{user.name}</td>
                 <td className="px-4 py-2 border">{user.description}</td>
-                <td className="px-4 py-2 border">{user.status}</td>
-                <td className="px-4 py-2 border">{formatDate(user.created_at)}</td>
-                <td className="px-4 py-2 border">{formatDate(user.updated_at)}</td>
+                <td className="px-4 py-2 border">
+                  <div
+                    className={`rounded-md flex justify-center ${
+                      user.status === "active" ? "bg-[#8CFBDE]" : "bg-[#DD2D4A]"
+                    }`}
+                  >
+                    {user.status}
+                  </div>
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDate(user.created_at)}
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDate(user.updated_at)}
+                </td>
                 <td className="px-4 py-2 border">
                   <button
                     className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded"
@@ -133,7 +151,12 @@ export const Tablepages = () => {
                   </button>
                   <button
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded ml-1"
-                    onClick={() => handleStatusChange(user.id, user.status === 'active' ? 'inactive' : 'active')}
+                    onClick={() =>
+                      handleStatusChange(
+                        user.id,
+                        user.status === "active" ? "inactive" : "active"
+                      )
+                    }
                   >
                     Change
                   </button>
@@ -149,8 +172,8 @@ export const Tablepages = () => {
           disabled={currentPage === 1}
           className={`px-4 py-2 rounded ${
             currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Previous
@@ -160,8 +183,8 @@ export const Tablepages = () => {
           disabled={currentPage === totalPages}
           className={`ml-4 px-4 py-2 rounded ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Next

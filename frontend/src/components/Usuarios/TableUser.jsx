@@ -1,10 +1,19 @@
 import React, { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
-export const TablaUsuarios = () => {
+export const TableUser = () => {
   const [users, setUsers] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [rolls, setRolls] = useState([]);
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/");
+    }
+  }, [navigate]);
 
   useEffect(() => {
     fetch("http://127.0.0.1:8000/api/rolls")
@@ -93,7 +102,7 @@ export const TablaUsuarios = () => {
       <div className="overflow-x-auto">
         <table className="table-auto  w-full border-collapse">
           <thead>
-            <tr className="bg-gray-200">
+            <tr className="bg-[#F49CBB]">
               <td className="px-4 py-2 border">ID</td>
               <td className="px-4 py-2 border">Email</td>
               <td className="px-4 py-2 border">Status</td>
@@ -108,16 +117,33 @@ export const TablaUsuarios = () => {
               <tr key={user.id} className="bg-white">
                 <td className="px-4 py-2 border">{user.id}</td>
                 <td className="px-4 py-2 border">{user.email}</td>
-                <td className="px-4 py-2 border">{user.status}</td>
-                <td className="px-4 py-2 border">{formatDateTime(user.created_at)}</td>
-                <td className="px-4 py-2 border">{formatDateTime(user.updated_at)}</td>
+                <td className="px-4 py-2 border">
+                  <div
+                    className={`rounded-md flex justify-center ${
+                      user.status === "active" ? "bg-[#8CFBDE]" : "bg-[#DD2D4A]"
+                    }`}
+                  >
+                    {user.status}
+                  </div>
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDateTime(user.created_at)}
+                </td>
+                <td className="px-4 py-2 border">
+                  {formatDateTime(user.updated_at)}
+                </td>
                 <td className="px-4 py-2 border">
                   {getRollName(user.roll_id)}
                 </td>
                 <td className="px-4 py-2 border">
                   <button
                     className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                    onClick={() => handleStatusChange(user.id, user.status === 'active' ? 'inactive' : 'active')}
+                    onClick={() =>
+                      handleStatusChange(
+                        user.id,
+                        user.status === "active" ? "inactive" : "active"
+                      )
+                    }
                   >
                     Change
                   </button>
@@ -133,8 +159,8 @@ export const TablaUsuarios = () => {
           disabled={currentPage === 1}
           className={`  px-4 py-2 rounded ${
             currentPage === 1
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Previous
@@ -144,8 +170,8 @@ export const TablaUsuarios = () => {
           disabled={currentPage === totalPages}
           className={`ml-4 px-4 py-2 rounded ${
             currentPage === totalPages
-              ? "bg-gray-300 cursor-not-allowed"
-              : "bg-gray-200 hover:bg-gray-300"
+              ? "bg-[#CBEEF3] cursor-not-allowed"
+              : "bg-[#CBEEF3] hover:bg-gray-300"
           }`}
         >
           Next
